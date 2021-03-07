@@ -32,9 +32,7 @@ asyncBtn.addEventListener("click", () => {
 });
 
 themeBtn.addEventListener("click", () => {
-  // state++;
-  // render();
-  // console.log("state=", state);
+  document.body.classList.toggle("dark");
 });
 
 render();
