@@ -1,4 +1,6 @@
 import "./styles.css";
+import { createStore } from "./createStore.js";
+import { rootReducer } from "./redux/rootReducer";
 
 const counter = document.getElementById("counter");
 const addBtn = document.getElementById("add");
@@ -6,35 +8,36 @@ const removeBtn = document.getElementById("remove");
 const asyncBtn = document.getElementById("async");
 const themeBtn = document.getElementById("theme");
 
-let state = 0;
+const store = createStore(rootReducer, 0);
 
-function render() {
-  counter.textContent = state;
-}
+// console.log("store=", store);
+// window.store = store;
 
 addBtn.addEventListener("click", () => {
-  state++;
-  render();
-  // console.log("state=", state);
+  store.dispatch({ type: "INCREMENT" });
 });
 
 removeBtn.addEventListener("click", () => {
-  state--;
-  render();
-  // console.log("state=", state);
+  store.dispatch({ type: "DECREMENT" });
 });
 
 asyncBtn.addEventListener("click", () => {
-  setTimeout(() => {
-    state++;
-    render();
-  }, 2000);
+  // setTimeout(() => {
+  //   state++;
+  //   render();
+  // }, 2000);
 });
 
-themeBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
+themeBtn.addEventListener("click", () => {});
+
+store.subscribe(() => {
+  console.log("store.getState()=", store.getState());
+  const state = store.getState();
+  counter.textContent = state;
 });
+//send anything to get state (initial) back
+store.dispatch({ type: "INIT_APPLICATION" });
 
-render();
-
-// console.log("counter=", counter);
+// store.getState();
+// store.dispatch({ type: "TEST" });
+// store.dispatch({ type: "INCREMENT" });
