@@ -12,10 +12,23 @@ const removeBtn = document.getElementById("remove");
 const asyncBtn = document.getElementById("async");
 const themeBtn = document.getElementById("theme");
 
-const store = createStore(rootReducer, 0, applyMiddleware(thunk));
+const store = createStore(rootReducer, 0, applyMiddleware(thunk, logger));
 
 // console.log("store=", store);
 // window.store = store;
+
+//let's create own middleware
+function logger(state) {
+  return function (next) {
+    return function (action) {
+      console.log("Prev state=", state.getState());
+      console.log("action=", action);
+      const newState = next(action);
+      console.log("Next state=", state.getState());
+      return newState;
+    };
+  };
+}
 
 addBtn.addEventListener("click", () => {
   store.dispatch(increment());
