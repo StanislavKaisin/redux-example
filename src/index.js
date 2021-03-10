@@ -3,7 +3,8 @@ import "./styles.css";
 import { createStore } from "redux";
 
 import { rootReducer } from "./redux/rootReducer";
-import { DECREMENT, INCREMENT } from "./redux/types";
+// import { DECREMENT, INCREMENT } from "./redux/types";
+import { asyncIncrement, decrement, increment } from "./redux/actions";
 
 const counter = document.getElementById("counter");
 const addBtn = document.getElementById("add");
@@ -17,18 +18,18 @@ const store = createStore(rootReducer, 0);
 // window.store = store;
 
 addBtn.addEventListener("click", () => {
-  store.dispatch({ type: INCREMENT });
+  store.dispatch(increment());
 });
 
 removeBtn.addEventListener("click", () => {
-  store.dispatch({ type: DECREMENT });
+  store.dispatch(decrement());
 });
 
 asyncBtn.addEventListener("click", () => {
   // setTimeout(() => {
-  //   state++;
-  //   render();
+  //   store.dispatch(increment());
   // }, 2000);
+  store.dispatch(asyncIncrement());
 });
 
 themeBtn.addEventListener("click", () => {});
