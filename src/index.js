@@ -1,7 +1,7 @@
 import "./styles.css";
 // import { createStore } from "./createStore.js";
-import { createStore } from "redux";
-
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
 import { rootReducer } from "./redux/rootReducer";
 // import { DECREMENT, INCREMENT } from "./redux/types";
 import { asyncIncrement, decrement, increment } from "./redux/actions";
@@ -12,7 +12,7 @@ const removeBtn = document.getElementById("remove");
 const asyncBtn = document.getElementById("async");
 const themeBtn = document.getElementById("theme");
 
-const store = createStore(rootReducer, 0);
+const store = createStore(rootReducer, 0, applyMiddleware(thunk));
 
 // console.log("store=", store);
 // window.store = store;

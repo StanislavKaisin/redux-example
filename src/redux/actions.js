@@ -9,5 +9,10 @@ export function decrement() {
 }
 
 export function asyncIncrement() {
-  return { type: ASYNC_INCREMENT };
+  return function (dispatch) {
+    setTimeout(() => {
+      dispatch({ type: ASYNC_INCREMENT });
+    }, 2000);
+  };
+  // return { type: ASYNC_INCREMENT };
 }
