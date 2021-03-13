@@ -1,10 +1,16 @@
 import "./styles.css";
 // import { createStore } from "./createStore.js";
-import { applyMiddleware, createStore } from "redux";
+import { applyMiddleware, createStore, compose } from "redux";
 import thunk from "redux-thunk";
+import logger from "redux-logger";
 import { rootReducer } from "./redux/rootReducer";
 // import { DECREMENT, INCREMENT } from "./redux/types";
-import { asyncIncrement, decrement, increment } from "./redux/actions";
+import {
+  asyncIncrement,
+  decrement,
+  increment,
+  changeTheme,
+} from "./redux/actions";
 
 const counter = document.getElementById("counter");
 const addBtn = document.getElementById("add");
@@ -12,13 +18,19 @@ const removeBtn = document.getElementById("remove");
 const asyncBtn = document.getElementById("async");
 const themeBtn = document.getElementById("theme");
 
-const store = createStore(rootReducer, 0, applyMiddleware(thunk, logger));
+const store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(thunk, logger),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+);
 
 // console.log("store=", store);
 // window.store = store;
 
 //let's create own middleware
-function logger(state) {
+function myLogger(state) {
   return function (next) {
     return function (action) {
       console.log("Prev state=", state.getState());
@@ -45,16 +57,24 @@ asyncBtn.addEventListener("click", () => {
   store.dispatch(asyncIncrement());
 });
 
-themeBtn.addEventListener("click", () => {});
+themeBtn.addEventListener("click", () => {
+  const newTheme = document.body.classList.contains("light") ? "dark" : "light";
+  // console.log("newTheme=", newTheme);
+  store.dispatch(changeTheme(newTheme));
+});
 
 store.subscribe(() => {
   // console.log("store.getState()=", store.getState());
   const state = store.getState();
-  counter.textContent = state;
+  counter.textContent = state.counter;
+  // document.body.className = state.theme.value;
+  const newTheme = state.theme.value;
+  // console.log("newTheme=", newTheme);
+  document.body.className = newTheme;
+  console.log("state.theme.disabled=", state.theme.disabled);
+  [addBtn, removeBtn, themeBtn, asyncBtn].forEach(
+    (btn) => (btn.disabled = state.theme.disabled)
+  );
 });
 //send anything to get state (initial) back
 store.dispatch({ type: "INIT_APPLICATION" });
-
-// store.getState();
-// store.dispatch({ type: "TEST" });
-// store.dispatch({ type: "INCREMENT" });
