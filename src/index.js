@@ -11,6 +11,7 @@ import {
   increment,
   changeTheme,
 } from "./redux/actions";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const counter = document.getElementById("counter");
 const addBtn = document.getElementById("add");
@@ -18,12 +19,17 @@ const removeBtn = document.getElementById("remove");
 const asyncBtn = document.getElementById("async");
 const themeBtn = document.getElementById("theme");
 
+// const store = createStore(
+//   rootReducer,
+//   compose(
+//     applyMiddleware(thunk, logger),
+//     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+//   )
+// );
+
 const store = createStore(
   rootReducer,
-  compose(
-    applyMiddleware(thunk, logger),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  composeWithDevTools(applyMiddleware(thunk, logger))
 );
 
 // console.log("store=", store);
